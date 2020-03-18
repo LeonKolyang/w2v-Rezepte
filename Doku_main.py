@@ -235,7 +235,7 @@ def main():
                         "corpus":   tabHandler.corpus})
         text.success("WordList and Corpus saved!")
         time.sleep(2)
-        text.empty()
+        text.empty() 
         
  
     
