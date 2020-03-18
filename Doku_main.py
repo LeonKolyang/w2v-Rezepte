@@ -228,7 +228,7 @@ def main():
             time.sleep(2)
             text.empty()
             MLdata = sidebar.opener()
-        visualiser = tabHandler.machineLearning(data,MLdata)
+        visualiser = tabHandler.machineLearning(data,MLdata) 
     
     if saver:
         sidebar.saver({ "wordList": tabHandler.wordList,
@@ -236,7 +236,7 @@ def main():
         text.success("WordList and Corpus saved!")
         time.sleep(2)
         text.empty()
-        
+
         
  
     
