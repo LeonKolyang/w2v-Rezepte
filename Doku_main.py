@@ -237,6 +237,7 @@ def main():
         time.sleep(2)
         text.empty()
         
+        
  
     
 
