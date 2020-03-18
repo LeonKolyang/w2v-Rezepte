@@ -85,7 +85,7 @@ mccabe==0.6.1
 mistune==0.8.4
 mkl-fft
 mkl-random
-mkl-service==2.3.0
+mkl-service
 more-itertools==8.2.0
 mpl-scatter-density==0.6
 msgpack==1.0.0
