@@ -28,7 +28,7 @@ class Sidebar:
         return st.sidebar.button("Reload Data", key="r1")
 
     def saveData(self):
-        return st.sidebar.button("Save Data", key="dSave")
+        return st.sidebar.button("Save Data from Preprocessing", key="dSave")
 
     def saver(self, data):
         wordSeries = pd.Series(data["wordList"])
@@ -38,11 +38,11 @@ class Sidebar:
 
 
     def openData(self):
-        return st.sidebar.button("Open Data", key="dOpen")
+        return st.sidebar.button("Load Data for Machine Learning", key="dOpen")
 
     def opener(self):
-        dataDict = {    "wordList": pd.read_csv('Data/Doku_wordList.csv', sep ="§", encoding = "UTF-8", header = None),
-                        "corpus":   pd.read_csv('Data/Doku_corpus.csv',sep="§", encoding = "UTF-8", header = None)}
+        dataDict = {    "wordList": pd.read_csv('Data/Doku_wordList.csv', sep ="§", encoding = "UTF-8", header = None, engine="python"),
+                        "corpus":   pd.read_csv('Data/Doku_corpus.csv',sep="§", encoding = "UTF-8", header = None, engine="python")}
         return dataDict
 
 
@@ -168,9 +168,13 @@ class TabHandler:
             plot = mlP.plot(w2v, vectors)
             st.pyplot(plot)
 
-        if st.button("Use Previous Results", key="prev"):
+        if st.button("Show results from previous run", key="prev"):
             vectorDf = pd.read_csv("Data/Doku_vectors.csv")
             wordList = pd.read_csv('Data/Doku_wordList.csv', sep ="§", encoding = "UTF-8", header = None)
+            loss = None
+            with open("Data/loss.txt", "r") as lossfile:
+                loss = lossfile.readline()
+            st.markdown("Loss: "+loss)
             vectorDf.columns = ["x1", "x2"]
             w2v = mlP.reloadVectorToDf(vectorDf, wordList)
             plot = mlP.plot(w2v, vectorDf)
@@ -186,7 +190,8 @@ def main():
     DP = Doku_ingredientPrepare.DataProvider()
     sidebar = Sidebar()
     tabHandler = TabHandler()
-    visualiser = None
+    visualiser = st.empty()
+    saver = False
     try:
         MLdata = sidebar.opener()
     except:
@@ -200,24 +205,30 @@ def main():
     dataSelector = sidebar.dataSelector()
     data = sidebar.dataReturn(dataSelector)
     
-    reload = sidebar.reloadButton()
+    #reload = sidebar.reloadButton()
 
-    saver = sidebar.saveData()
     text = st.sidebar.empty()
-    opener = sidebar.openData()
-    if opener:
-        MLdata = sidebar.opener()
     
-    if reload:
-        data = None
-        data = DP.importer(dataSelector)
+    
+    #if reload:
+    #    data = None
+    #    data = DP.importer(dataSelector)
 
     if tab == "Data Preprocessing":
-        visualiser = None
+        visualiser.empty()
+        saver = sidebar.saveData()
         visualiser = tabHandler.preProcessing(data)
+
     if tab == "Machine Learning Task":
-        visualiser = None
-        tabHandler.machineLearning(data,MLdata)
+        text.empty()
+        visualiser.empty()
+        opener = sidebar.openData()
+        if opener:
+            text.success("WordList and Corpus loaded!")
+            time.sleep(2)
+            text.empty()
+            MLdata = sidebar.opener()
+        visualiser = tabHandler.machineLearning(data,MLdata)
     
     if saver:
         sidebar.saver({ "wordList": tabHandler.wordList,

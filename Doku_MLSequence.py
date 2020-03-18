@@ -96,8 +96,13 @@ class MLParser:
             
             bar.progress(prog)
             if i % 1000 == 0:
-                progtext.text('iteration '+str(i)+' loss is : ' + str(sess.run(self.loss, feed_dict={self.x: self.X_train, self.y_label: self.Y_train})))
+                progtext.markdown('Iteration: '+'  \t'+str(i)+'  \n'+' Loss: '+'  \t'
+                                + str(sess.run(self.loss, feed_dict={self.x: self.X_train, self.y_label: self.Y_train})))
         bar.empty()
+        loss = sess.run(self.loss, feed_dict={self.x: self.X_train, self.y_label: self.Y_train})
+        progtext.markdown("Loss: " +str(loss))
+        with open("Data/loss.txt", "w") as lossfile:
+            lossfile.write(str(loss))
         return sess
 
     def calculateVectors(self, sess):
