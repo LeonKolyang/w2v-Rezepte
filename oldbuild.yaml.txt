@@ -1,0 +1,5 @@
+steps:
+- name: 'gcr.io/cloud-builders/docker'
+  args: ['build', '--tag=gcr.io/$PROJECT_ID/w2vrecipes:latest', '.']
+images: [
+  'eu.gcr.io/w2vrecipes/appengine/default.20200318t231009']
