@@ -1,7 +1,7 @@
 runtime: python
 env: flex
 python:
-  version: 3.7
+  version:  3.7
   install:
     - requirements: requirements.txt
 entrypoint: streamlit run script.py 
