@@ -1,8 +1,8 @@
 steps:
 - name: 'gcr.io/cloud-builders/docker'
-  dir:  '/'
+  dir:  'w2vrecipes/'
   args: ['build', '-f', 'Dockerfile', '.']
 - name: 'gcr.io/cloud-builders/gcloud'
-  dir:  '/'
+  dir:  'w2vrecipes/'
   args: ['app', 'deploy', '--ignore-file=Dockerfile']
 
