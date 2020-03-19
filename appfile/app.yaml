@@ -1,6 +1,6 @@
 runtime: python37
 env: flex
-python:
-  install:
-    - requirements: requirements.txt
-entrypoint: streamlit run script.py 
+entrypoint: streamlit run --server.port 8080 --server.enableCORS false main.py
+steps: 
+  - name: 'gcr.io/cloud-builders/docker'
+    args:  ['RUN', 'pip3', 'install', '-r', 'requirements.txt']
