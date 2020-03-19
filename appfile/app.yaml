@@ -1,2 +1,9 @@
-runtime: custom
+runtime: python
+runtime_config: 
+  python_version: 3
 env: flex
+python:
+  version: 3.7
+  install:
+    - requirements: requirements.txt
+entrypoint: streamlit run script.py 
