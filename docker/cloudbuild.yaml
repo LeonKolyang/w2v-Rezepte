@@ -1,8 +1,8 @@
 steps:
 - name: 'gcr.io/cloud-builders/docker'
-  dir:  'workspace/'
+  dir:  '~/'
   args: ['build', '-f', 'Dockerfile', '.']
 - name: 'gcr.io/cloud-builders/gcloud'
-  dir:  'workspace/'
+  dir:  '~/'
   args: ['app', 'deploy', '--ignore-file=Dockerfile']
 
