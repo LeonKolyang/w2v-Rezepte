@@ -1,8 +1,8 @@
 steps:
 - name: 'gcr.io/cloud-builders/docker'
-  dir:  '../docker/'
+  dir:  '$PROJECT_ID/'
   args: ['build', '-f', 'Dockerfile', '.']
 - name: 'gcr.io/cloud-builders/gcloud'
-  dir:  '../docker/'
+  dir:  '$PROJECT_ID/'
   args: ['app', 'deploy', '--ignore-file=Dockerfile']
 
