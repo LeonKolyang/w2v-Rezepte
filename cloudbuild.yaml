@@ -4,5 +4,5 @@ steps:
   args: ['build', '-f', 'Dockerfile', '.']
 - name: 'gcr.io/cloud-builders/gcloud'
   dir:  'appfile/'
-  args: ['app', 'deploy', '--ignore-file=Dockerfile']
+  args: ['app', 'deploy', 'app.yaml']
 
