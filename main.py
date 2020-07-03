@@ -11,12 +11,11 @@ import json
 import datetime
 import DataProvider 
 import MLConcept
-#import Doku_MLSequence
 import Preprocessing
-#import MLTask
 import Grabbing
 import Title
 import Concept
+import W2VTest
 #import Vectorization
 #import KMeans
 from PIL import Image
@@ -33,7 +32,7 @@ class Sidebar:
     def navigator(self):
         st.sidebar.header("DataHub")
         #routes = ["Projektvorstellung", "Konzept", "Data Grabbing", "Data Preprocessing", "Machine Learning Task", "Machine Learning Offline", "KMeans"]
-        routes = ["Projektvorstellung", "Übergeordnetes Konzept", "Idee des Machine Learnings", "Data Grabbing", "Data Preprocessing", "Vectorization", "KMeans"]
+        routes = ["Projektvorstellung", "Übergeordnetes Konzept", "Idee des Machine Learnings", "Data Grabbing", "Data Preprocessing", "Modell Test", "KMeans"]
 
         return st.sidebar.radio("Go to", routes)
         
@@ -103,6 +102,7 @@ def main():
     mlconcept = MLConcept.MLConcept()
     grabbing = Grabbing.Grabbing()
     preprocessing = Preprocessing.Preprocessing()
+    w2vTest = W2VTest.Model_Test()
 
     #mlTask = MLTask.MLTask()
     #vectorization = Vectorization.Vectorization()
@@ -164,13 +164,7 @@ def main():
 
     if tab == "Data Grabbing":
         visualiser.empty()
-        # sample = Image.open("Images/Rezept Beispiel.png")
-        # zubereitung = Image.open("Images/Rezept Beispiel_Name.png")
-        # zutaten = Image.open("Images/Rezept Beispiel_Zutaten.png")
-        # menge = Image.open("Images/Rezept Beispiel_Menge.png")
-        # einheit = Image.open("Images/Rezept Beispiel_Einheit.png")
-        # bezeichnung = Image.open("Images/Rezept Beispiel_Bezeichnung.png")
-        
+       
         #@st.cache
         def loadGrabImages():
            
@@ -202,6 +196,9 @@ def main():
         images = loadDataImages()
         visualiser = preprocessing.body(images[0], images[1], images[2])
         
+    if tab == "Modell Test":
+        visualiser.empty()
+        visualiser = w2vTest.body()
     
 
     if tab == "Machine Learning Task":
