@@ -26,7 +26,8 @@ import matplotlib.pyplot as plt
 
 class Sidebar:
     def __init__(self):
-        self.DP = Doku_ingredientPrepare.DataProvider()
+        pass
+        #self.DP = Doku_ingredientPrepare.DataProvider()
 
     def navigator(self):
         st.sidebar.header("DataHub")
