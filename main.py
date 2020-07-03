@@ -9,11 +9,12 @@ import csv
 import time
 import json
 import datetime
-#import Doku_ingredientPrepare 
+import DataProvider 
+import MLConcept
 #import Doku_MLSequence
-#import Preprocessing
+import Preprocessing
 #import MLTask
-#import Grabbing
+import Grabbing
 import Title
 import Concept
 #import Vectorization
@@ -32,7 +33,7 @@ class Sidebar:
     def navigator(self):
         st.sidebar.header("DataHub")
         #routes = ["Projektvorstellung", "Konzept", "Data Grabbing", "Data Preprocessing", "Machine Learning Task", "Machine Learning Offline", "KMeans"]
-        routes = ["Projektvorstellung", "Konzept", "Data Grabbing", "Data Preprocessing", "Vectorization", "KMeans"]
+        routes = ["Projektvorstellung", "Übergeordnetes Konzept", "Idee des Machine Learnings", "Data Grabbing", "Data Preprocessing", "Vectorization", "KMeans"]
 
         return st.sidebar.radio("Go to", routes)
         
@@ -99,8 +100,10 @@ def main():
     #DP = Doku_ingredientPrepare.DataProvider()
     title = Title.Title()
     concept = Concept.Concept()
-    #grabbing = Grabbing.Grabbing()
-    #preprocessing = Preprocessing.Preprocessing()
+    mlconcept = MLConcept.MLConcept()
+    grabbing = Grabbing.Grabbing()
+    preprocessing = Preprocessing.Preprocessing()
+
     #mlTask = MLTask.MLTask()
     #vectorization = Vectorization.Vectorization()
 
@@ -135,7 +138,7 @@ def main():
         image = loadProjImages()
         visualiser = title.body(image)
 
-    if tab == "Konzept":
+    if tab == "Übergeordnetes Konzept":
         visualiser.empty()
 
         @st.cache
@@ -147,8 +150,17 @@ def main():
             return [concept1, concept2, concept3, concept4]
         
         images = loadConImages()
-        
         visualiser = concept.body(images)
+    
+    if tab == "Idee des Machine Learnings":
+        def loadMLImages():
+            emptyGrid = "static/Word2Vec Idee_leer.jpeg"
+            milkGrid = "static/Word2Vec Idee_Milch.jpeg"
+            cherryGrid = "static/Word2Vec Idee_Kirschen.jpeg"
+            return [emptyGrid, milkGrid, cherryGrid]
+        images = loadMLImages()
+        visualiser = mlconcept.body(images)
+
 
     if tab == "Data Grabbing":
         visualiser.empty()
@@ -162,12 +174,13 @@ def main():
         #@st.cache
         def loadGrabImages():
            
-            sample = "https://storage.googleapis.com/w2vfiles/static/Rezept Beispiel.png"
-            zubereitung = "https://storage.googleapis.com/w2vfiles/static/Rezept Beispiel_Name.png"
-            zutaten = "https://storage.googleapis.com/w2vfiles/static/Rezept Beispiel_Zutaten.png"
-            menge = "https://storage.googleapis.com/w2vfiles/static/Rezept Beispiel_Menge.png"
-            einheit ="https://storage.googleapis.com/w2vfiles/static/Rezept Beispiel_Einheit.png"
-            bezeichnung = "https://storage.googleapis.com/w2vfiles/static/Rezept Beispiel_Bezeichnung.png"
+            sample = "static/Rezept Beispiel.png"
+            zubereitung = "static/Rezept Beispiel_Name.png"
+            zutaten = "static/Rezept Beispiel_Zutaten.png"
+            menge = "static/Rezept Beispiel_Menge.png"
+            einheit ="static/Rezept Beispiel_Einheit.png"
+            bezeichnung = "static/Rezept Beispiel_Bezeichnung.png"
+            
             return [sample, zubereitung, zutaten, menge, einheit, bezeichnung]
 
         images = loadGrabImages()
@@ -177,13 +190,17 @@ def main():
     if tab == "Data Preprocessing":
         #dataSelector = sidebar.dataSelector()
         #data = sidebar.dataReturn(dataSelector)
-        emptyGrid = "https://storage.googleapis.com/w2vfiles/static/Word2Vec Idee_leer.jpeg"
-        milkGrid = "https://storage.googleapis.com/w2vfiles/static/Word2Vec Idee_Milch.jpeg"
-        cherryGrid = "https://storage.googleapis.com/w2vfiles/static/Word2Vec Idee_Kirschen.jpeg"
+        @st.cache
+        def loadDataImages():
+            emptyGrid = "static/Word2Vec Idee_leer.jpeg"
+            milkGrid = "static/Word2Vec Idee_Milch.jpeg"
+            cherryGrid = "static/Word2Vec Idee_Kirschen.jpeg"
+            return [emptyGrid, milkGrid, cherryGrid]
         
         visualiser.empty()
         #saver = sidebar.saveData()
-        visualiser = preprocessing.body(emptyGrid, milkGrid, cherryGrid)
+        images = loadDataImages()
+        visualiser = preprocessing.body(images[0], images[1], images[2])
         
     
 
