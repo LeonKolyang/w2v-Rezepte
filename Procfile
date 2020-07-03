@@ -1,1 +1,1 @@
-web: sh setup.sh && streamlit run Doku_main.py
+web: streamlit run main.py
