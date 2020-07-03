@@ -15,7 +15,7 @@ import datetime
 #import MLTask
 #import Grabbing
 import Title
-#import Concept
+import Concept
 #import Vectorization
 #import KMeans
 from PIL import Image
@@ -98,7 +98,7 @@ class APIHandler:
 def main():
     #DP = Doku_ingredientPrepare.DataProvider()
     title = Title.Title()
-    #concept = Concept.Concept()
+    concept = Concept.Concept()
     #grabbing = Grabbing.Grabbing()
     #preprocessing = Preprocessing.Preprocessing()
     #mlTask = MLTask.MLTask()
@@ -129,7 +129,7 @@ def main():
 
         @st.cache 
         def loadProjImages():
-            projImg = "static/Idee.png"
+            projImg = ["static/Idee.png"]
             return projImg
         
         image = loadProjImages()
@@ -140,15 +140,15 @@ def main():
 
         @st.cache
         def loadConImages():
-            concept1 = "https://storage.googleapis.com/w2vfiles/static/Konzept_Zerlegung.png"
-            concept2 = "https://storage.googleapis.com/w2vfiles/static/Konzept_Auswertung.png"
-            concept3 = "https://storage.googleapis.com/w2vfiles/static/Konzept_Vereinheitlichung.png"
-            concept4 = "https://storage.googleapis.com/w2vfiles/static/Konzept_Bewertung.png"
+            concept1 = "static/Konzept_Zerlegung.png"
+            concept2 = "static/Konzept_Auswertung.png"
+            concept3 = "static/Konzept_Vereinheitlichung.png"
+            concept4 = "static/Konzept_Bewertung.png"
             return [concept1, concept2, concept3, concept4]
         
         images = loadConImages()
         
-        visualiser = concept.body(images[0],images[1], images[2], images[3])
+        visualiser = concept.body(images)
 
     if tab == "Data Grabbing":
         visualiser.empty()
