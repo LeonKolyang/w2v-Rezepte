@@ -1,3 +1,5 @@
+import sys
+
 import streamlit as st
 import pandas as pd
 from pymongo import MongoClient
@@ -9,13 +11,10 @@ import csv
 import time
 import json
 import datetime
-import DataProvider 
-import MLConcept
-import Preprocessing
-import Grabbing
-import Title
-import Concept
-import W2VTest
+
+
+from Pages import *
+#import Concept
 #import Vectorization
 #import KMeans
 from PIL import Image
@@ -32,7 +31,7 @@ class Sidebar:
     def navigator(self):
         st.sidebar.header("DataHub")
         #routes = ["Projektvorstellung", "Konzept", "Data Grabbing", "Data Preprocessing", "Machine Learning Task", "Machine Learning Offline", "KMeans"]
-        routes = ["Projektvorstellung", "Übergeordnetes Konzept", "Idee des Machine Learnings", "Data Grabbing", "Data Preprocessing", "Modell Test", "KMeans"]
+        routes = ["Projektvorstellung", "Übergeordnetes Konzept", "Idee des Machine Learnings", "Data Grabbing", "Data Preprocessing", "Modell Test"]
 
         return st.sidebar.radio("Go to", routes)
         
