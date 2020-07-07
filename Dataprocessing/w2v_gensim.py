@@ -66,6 +66,12 @@ class W2V():
         x_vals, y_vals, labels = self.reduce_dimensions(self.model)
 
         #Speichere die finalen Wordembeddings als .csv Datei ab
+        try:
+            pd.read_csv("../Data/gensim_w2v_"+str(no_iterations)+"_"+str(window_size)+".csv")
+        except:
+            file = open("../Data/gensim_w2v_"+str(no_iterations)+"_"+str(window_size)+".csv", "w+")
+            file.close()
+
         values = pd.DataFrame({"x":x_vals,"y" :y_vals,"labels":labels})
         values.to_csv("../Data/gensim_w2v_"+str(no_iterations)+"_"+str(window_size)+".csv", header=True, sep="|")
         return values

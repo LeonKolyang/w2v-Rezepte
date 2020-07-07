@@ -32,6 +32,7 @@ class Model_Test():
             if show_clusters:
                 st.text("Details der einzelnen Cluster")
                 st.dataframe(results[0])
+                    
 
 
     #Methode zum Aufrufen des Tests
