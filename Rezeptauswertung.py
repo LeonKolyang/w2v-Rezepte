@@ -216,7 +216,7 @@ def main():
         kmeans = KMeans.KMeans()
         visualiser = kmeans.body()
 
-    for i in range(2):st.sidebar.text("")
+    for i in range(13):st.sidebar.text("")
     st.sidebar.markdown("Interaktive Begleitdokumentation")
     st.sidebar.markdown("\"Data Mining: Extraktion von Onlinerezepten und Verarbeitung mittels Word2Vec\"")
     st.sidebar.text("Leon Kolyang Menkreo-Kuntzsch")
