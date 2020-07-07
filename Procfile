@@ -1,1 +1,1 @@
-web: sh setup.sh && streamlit run "W2V Rezepte.py"
+web: sh setup.sh && streamlit run Rezeptauswertung.py
