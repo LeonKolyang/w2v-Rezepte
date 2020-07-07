@@ -14,7 +14,7 @@
     "environments": {
       "test": {
         "scripts": {
-          "serve": "streamlit run main.py"
+          "serve": "streamlit run W2V Rezepte.py"
         }
       }
     }
