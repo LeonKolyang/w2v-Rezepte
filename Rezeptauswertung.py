@@ -29,7 +29,7 @@ class Sidebar:
         #self.DP = Doku_ingredientPrepare.DataProvider()
 
     def navigator(self):
-        st.sidebar.header("DataHub")
+        st.sidebar.header("Navigation")
         #routes = ["Projektvorstellung", "Konzept", "Data Grabbing", "Data Preprocessing", "Machine Learning Task", "Machine Learning Offline", "KMeans"]
         routes = ["Projektvorstellung", "Übergeordnetes Konzept", "Idee des Machine Learnings", "Data Grabbing", "Data Preprocessing", "Modell Test"]
 
@@ -215,6 +215,11 @@ def main():
         visualiser.empty()
         kmeans = KMeans.KMeans()
         visualiser = kmeans.body()
+
+    for i in range(2):st.sidebar.text("")
+    st.sidebar.markdown("Interaktive Begleitdokumentation")
+    st.sidebar.markdown("\"Data Mining: Extraktion von Onlinerezepten und Verarbeitung mittels Word2Vec\"")
+    st.sidebar.text("Leon Kolyang Menkreo-Kuntzsch")
 
     
 
