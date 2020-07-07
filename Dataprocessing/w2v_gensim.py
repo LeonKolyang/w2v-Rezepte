@@ -1,5 +1,6 @@
 import gensim.models
 import pandas as pd
+import streamlit as st
 
 from sklearn.decomposition import IncrementalPCA    # inital reduction
 from sklearn.manifold import TSNE                   # final reduction
@@ -17,6 +18,7 @@ class W2V():
         self.zutaten_verzeichnis = data
 
     #Baue aus dem Zutatenverzeichnis die Sätze
+    #@st.cache
     def buildSentences(self):
         for index, row in self.zutaten_verzeichnis.iterrows():
             list = row[0].split(" ")
@@ -24,17 +26,19 @@ class W2V():
                 list = list[:-1]
             self.sentences.append(list)
         #Testausgabe der Sätze
-        for i, sentence in enumerate(self.sentences):
-            if i == 10:
-                break
-            print(sentence)
+        #for i, sentence in enumerate(self.sentences):
+        #    if i == 10:
+        #        break
+        #    print(sentence)
 
+    #@st.cache
     def train_model(self, no_iterations, window_size):
         #Aufruf des Trainings desWord2Vec Algorithmus mit den in der Arbeit beschriebenen Parametern
         self.model = gensim.models.Word2Vec(self.sentences, sg=1,min_count=0, size= 300, negative=5, iter=no_iterations, window=window_size)
 
 
     #gensim implementierung des scikit-learn Dimensionsreduzieren
+    #@st.cache
     def reduce_dimensions(self, model):
         num_dimensions = 2  # final num dimensions (2D, 3D, etc)
 
@@ -57,12 +61,12 @@ class W2V():
         y_vals = [v[1] for v in vectors]
         return x_vals, y_vals, labels
 
-    def save_vectors(self):
+    def save_vectors(self, no_iterations, window_size):
         #Reduzierung der Dimensionen
         x_vals, y_vals, labels = self.reduce_dimensions(self.model)
 
         #Speichere die finalen Wordembeddings als .csv Datei ab
         values = pd.DataFrame({"x":x_vals,"y" :y_vals,"labels":labels})
-        values.to_csv("Data/gensim_w2v.csv", header=False, sep="|")
+        values.to_csv("../Data/gensim_w2v_"+str(no_iterations)+"_"+str(window_size)+".csv", header=True, sep="|")
         return values
 

@@ -19,14 +19,19 @@ class Model_Test():
         self.zutatenDf = pd.read_csv("Data/zutatenDf.csv", sep="|", header = 0)
         self.zutatenDf = self.zutatenDf.drop("Menge", axis=1)
 
-    def body(self):
+    def body(self): 
         no_iterations = st.sidebar.number_input("Anzahl Trainingsepochen", min_value=1, value= 5)
         window_size = st.sidebar.slider("Wortfenstergröße", min_value=1, max_value=10, value=2)
         no_cluster = st.sidebar.number_input("Anzahl Cluster", min_value=1, value= 5)
+        show_clusters=st.sidebar.checkbox("Zeige detaillierte Auswertung")
         results = None
         if st.button("Starte Testlauf"):
             results = self.run_test(no_iterations, no_cluster, window_size)
-            st.dataframe(results)
+            st.text("Auswertung aller Cluster")
+            st.dataframe(results[1])
+            if show_clusters:
+                st.text("Details der einzelnen Cluster")
+                st.dataframe(results[0])
 
 
     #Methode zum Aufrufen des Tests
@@ -40,9 +45,13 @@ class Model_Test():
         model_trainer.load_data(self.zutaten_verzeichnis)
 
         model_trainer.buildSentences()
+        w2v=None
         with st.spinner("Modelltraining"):
-            model_trainer.train_model(no_iterations,window_size)
-        w2v = model_trainer.save_vectors()
+            try:
+                w2v=pd.read_csv("../Data/gensim_w2v_"+str(no_iterations)+"_"+str(window_size)+".csv", header=0, sep="|")
+            except :
+                model_trainer.train_model(no_iterations,window_size)
+                w2v = model_trainer.save_vectors(no_iterations, window_size)
 
         #Cluster die Vektoren aus dem Word2Vec Modell
         cluster_data = w2v[["x","y"]]
@@ -54,24 +63,29 @@ class Model_Test():
 
         #Erzeugen eines DataFrames zur Erzeugung der Kontrollergebnisse
         clusterlist = w2v["Cluster"].unique()
-        results = pd.DataFrame(index=[clusterlist], columns=["Zugeordnet", "Matches", "Hitrate"])
+        results = pd.DataFrame(index=[clusterlist], columns=["Zugeordnete Wörter", "Daraus Bezeichnungen", "Reinheit"])
         for cluster in clusterlist:
-            c_frame= w2v.loc[w2v["Cluster"]==cluster]
+            c_frame= w2v.loc[w2v["Cluster"]==cluster] 
             match_list = []
             for index, row in c_frame.iterrows():
                 if row["labels"] in list(self.zutatenDf["Zuordnung"]):
                     match_list.append(row["labels"])
                 
-            results["Zugeordnet"][cluster] = len(c_frame)
-            results["Matches"][cluster] = len(match_list)
-            results["Hitrate"][cluster] = round((len(match_list)/len(c_frame))*100,1)
+            results["Zugeordnete Wörter"][cluster] = len(c_frame)
+            results["Daraus Bezeichnungen"][cluster] = len(match_list)
+            results["Reinheit"][cluster] = round((len(match_list)/len(c_frame))*100,1)
+        
+        results = results.sort_index()
+        new_indexes = []
+        for index in list(results.index): new_indexes.append("Cluster "+index[0][1])
+        results.index = new_indexes
 
         #Ausgabe der Testläufe des Word2Vec Algorithmus
         result_index = ["Maximum", "Durchschnitt", "Minimum", "Über 50", "Unter 10"]
-        result_data = [results["Hitrate"].max(), results["Hitrate"].mean(), results["Hitrate"].min(), 
-                        len(results[results["Hitrate"] > 50]), len(results[results["Hitrate"] < 10])]
+        result_data = [results["Reinheit"].max(), results["Reinheit"].mean(), results["Reinheit"].min(), 
+                        len(results[results["Reinheit"] > 50]), len(results[results["Reinheit"] < 10])]
         result_frame = pd.DataFrame(data=result_data, index=result_index, columns=["Reinheit"])
-        return result_frame
+        return [results, result_frame]
 
         # text = st.empty()
         # st.write(results)        
