@@ -25,7 +25,7 @@ class Model_Test():
         dataset = pd.read_csv("Data/Doku_corpusNoAmount.csv", sep= "|", header=None)
 
         no_iterations = st.sidebar.number_input("Anzahl Trainingsepochen", min_value=1, value= 5)
-        window_size = st.sidebar.slider("Wortfenstergröße", min_value=1, max_value=10, value=2)
+        window_size = st.sidebar.number_input("Wortfenstergröße", min_value=1, value=2)
         no_cluster = st.sidebar.number_input("Anzahl Cluster", min_value=1, value= 5)
         show_clusters=st.sidebar.checkbox("Zeige detaillierte Auswertung")
         results = None
