@@ -33,7 +33,7 @@ class Auswertung():
 
 
     def body(self):
-        bezeichnung_list = pd.read_csv("../Data/topIngredients.csv", header = 0,sep="," )["name"].tolist()
+        bezeichnung_list = pd.read_csv("Data/topIngredients.csv", header = 0,sep="," )["name"].tolist()
 
         no_iterations = st.sidebar.number_input("Anzahl Trainingsepochen", min_value=1, value= 5)
         window_size = st.sidebar.slider("Wortfenstergröße", min_value=1, max_value=10, value=2)
