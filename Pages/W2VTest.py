@@ -22,7 +22,7 @@ class Model_Test():
     def body(self): 
         #dataset = st.sidebar.selectbox("Datensatz", ["Korpus mit Sonderzeichen", "Korpus ohne Sonderzeichen"])
         #if dataset == "Korpus mit Sonderzeichen":
-        #    dataset = pd.read_csv("Data/Doku_corpusNoAmount.csv", sep= "|", header=None)
+        dataset = pd.read_csv("Data/Doku_corpusNoAmount.csv", sep= "|", header=None)
 
         no_iterations = st.sidebar.number_input("Anzahl Trainingsepochen", min_value=1, value= 5)
         window_size = st.sidebar.slider("Wortfenstergröße", min_value=1, max_value=10, value=2)
