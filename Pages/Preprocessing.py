@@ -93,9 +93,9 @@ class Preprocessing:
         if st.checkbox("Datensatz anzeigen", key=3, value=showDataframes):
             st.write(zutatenDf[["Menge", "Einheit", "Bezeichnung", "Zuordnung"]]) 
 
-        st.subheader("Generieren des Korpus und der Wortliste")
-        st.write("Aus dem bereinigten Datensatz kann anschließend der Korpus und die Wortliste entnommen werden. "
-                    "Für den Korpus werden Zeilen des Datensatzes zusammengefasst und in eine Liste übergeben. "
+        st.subheader("Generieren des Zutatenverzeichnis und des Korpus")
+        st.write("Aus dem bereinigten Datensatz kann anschließend das Zutatenverzeichnis und der Korpus entnommen werden. "
+                    "Für das Zutatenverzeichnis werden Zeilen des Datensatzes zusammengefasst und in eine Liste übergeben. "
         )
 
         fullWordList = pd.read_csv('Data/Doku_wordListAllColumnns.csv', encoding="UTF-8", sep="|", header =None, names=["Wort"])
@@ -104,17 +104,17 @@ class Preprocessing:
         reducedWordList = pd.read_csv('Data/Doku_wordListNoAmount.csv', encoding="UTF-8", sep="|", header =None, names=["Wort"])
         reducedCorpus = pd.read_csv('Data/Doku_corpusNoAmount.csv', encoding="UTF-8", sep="|", header = None, names=["Zutat"])
 
-        if st.checkbox("Korpus anzeigen",value=showDataframes): 
+        if st.checkbox("Zutatenverzeichnis anzeigen",value=showDataframes): 
             st.dataframe(reducedCorpus)
-            st.text("Reduzierter Korpus mit "+str(len(reducedCorpus))+" Einträgen")
+            st.text("Reduziertes Zutatenverzeichnis mit "+str(len(reducedCorpus))+" Einträgen")
 
        
 
-        if st.checkbox("Wortliste anzeigen",value=showDataframes):
+        if st.checkbox("Korpus anzeigen",value=showDataframes):
             st.dataframe(reducedWordList)
-            st.text("Reduzierte Wortliste mit "+str(len(reducedWordList))+" Einträgen")
+            st.text("Reduzierter Korpus mit "+str(len(reducedWordList))+" Einträgen")
 
-        st.write("Bevor der Korpus und die Wortliste durch den Algorithmus ausgewerter werden, wird die Wortliste um Sonderzeichen und Duplikate bereinigt.")
+        st.write("Bevor das Zutatenverzeichnis und der Korpus durch den Algorithmus ausgewerter werden, wird der Korpus um Sonderzeichen und Duplikate bereinigt.")
         st.write("Es werden nur Sonderzeichen an erster oder letzter Stelle des Wortes berücksichtigt.")
 
         signList = [",", "(", ")", "/", ".", "+","\"", ":","-","„","“","&"]
@@ -124,7 +124,7 @@ class Preprocessing:
             st.dataframe(reducedCleanWordList)
             st.text("Reduzierter Korpus mit "+str(len(reducedCleanWordList))+" Einträgen")
 
-        st.write("Anschließend werden noch Duplikate aus der Wortliste entfernt.")
+        st.write("Anschließend werden noch Duplikate aus dem Korpus entfernt.")
 
         reducedCleanWordList = reducedCleanWordList.sort_values()
         reducedCleanWordList = reducedCleanWordList.drop_duplicates(keep=False)
@@ -133,7 +133,7 @@ class Preprocessing:
             st.write(reducedCleanWordList)
             st.text("Reduzierter Korpus mit "+str(len(reducedCleanWordList))+" Einträgen")        
 
-        st.write("Der Korpus und die Wortliste werden im nächsten Schritt an den Algorithmus übergeben und dienen als Grundlage zur Ausführung.")
+        st.write("Das Zutatenverzeichnis und der Korpus werden im nächsten Schritt an den Algorithmus übergeben und dienen als Grundlage zur Ausführung.")
 
         
 

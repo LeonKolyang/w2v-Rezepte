@@ -31,7 +31,7 @@ class Sidebar:
     def navigator(self):
         st.sidebar.header("Navigation")
         #routes = ["Projektvorstellung", "Konzept", "Data Grabbing", "Data Preprocessing", "Machine Learning Task", "Machine Learning Offline", "KMeans"]
-        routes = ["Projektvorstellung", "Übergeordnetes Konzept", "Idee des Machine Learnings", "Data Grabbing", "Data Preprocessing", "Modell Test"]
+        routes = ["Projektvorstellung", "Data Grabbing", "Data Preprocessing", "Finaler Datensatz", "Modell Test", "Auswertungsergebnisse"]
 
         return st.sidebar.radio("Go to", routes)
         
@@ -68,7 +68,6 @@ class Sidebar:
 
 
 
-
 class APIHandler:
     def __init__(self):
         self.URL = "https://mlservice-dot-w2vrecipes.appspot.com/"
@@ -97,12 +96,11 @@ class APIHandler:
 def main():
     #DP = Doku_ingredientPrepare.DataProvider()
     title = Title.Title()
-    concept = Concept.Concept()
-    mlconcept = MLConcept.MLConcept()
+    finaldata = Finaldata.finalData()
     grabbing = Grabbing.Grabbing()
     preprocessing = Preprocessing.Preprocessing()
     w2vTest = W2VTest.Model_Test()
-
+    auswertung = Auswertung.Auswertung()
     #mlTask = MLTask.MLTask()
     #vectorization = Vectorization.Vectorization()
 
@@ -128,37 +126,7 @@ def main():
 
     if tab == "Projektvorstellung":
         visualiser.empty()
-
-        @st.cache 
-        def loadProjImages():
-            projImg = ["static/Idee.png"]
-            return projImg
-        
-        image = loadProjImages()
-        visualiser = title.body(image)
-
-    if tab == "Übergeordnetes Konzept":
-        visualiser.empty()
-
-        @st.cache
-        def loadConImages():
-            concept1 = "static/Konzept_Zerlegung.png"
-            concept2 = "static/Konzept_Auswertung.png"
-            concept3 = "static/Konzept_Vereinheitlichung.png"
-            concept4 = "static/Konzept_Bewertung.png"
-            return [concept1, concept2, concept3, concept4]
-        
-        images = loadConImages()
-        visualiser = concept.body(images)
-    
-    if tab == "Idee des Machine Learnings":
-        def loadMLImages():
-            emptyGrid = "static/Word2Vec Idee_leer.jpeg"
-            milkGrid = "static/Word2Vec Idee_Milch.jpeg"
-            cherryGrid = "static/Word2Vec Idee_Kirschen.jpeg"
-            return [emptyGrid, milkGrid, cherryGrid]
-        images = loadMLImages()
-        visualiser = mlconcept.body(images)
+        visualiser = title.body()
 
 
     if tab == "Data Grabbing":
@@ -194,11 +162,18 @@ def main():
         #saver = sidebar.saveData()
         images = loadDataImages()
         visualiser = preprocessing.body(images[0], images[1], images[2])
+
+    if tab == "Finaler Datensatz":
+        visualiser.empty()
+        visualiser = finaldata.body()
         
     if tab == "Modell Test":
         visualiser.empty()
         visualiser = w2vTest.body()
     
+    if tab == "Auswertungsergebnisse":
+        visualiser.empty()
+        visualiser = auswertung.body()
 
     if tab == "Machine Learning Task":
         dataSelector = sidebar.dataSelector()

@@ -16,6 +16,7 @@ class W2V():
     #Lade das Zutatenverzeichnis auf dem trainiert wird
     def load_data(self, data):
         self.zutaten_verzeichnis = data
+        
 
     #Baue aus dem Zutatenverzeichnis die Sätze
     #@st.cache
@@ -26,15 +27,14 @@ class W2V():
                 list = list[:-1]
             self.sentences.append(list)
         #Testausgabe der Sätze
-        #for i, sentence in enumerate(self.sentences):
+        # for i, sentence in enumerate(self.sentences):
         #    if i == 10:
         #        break
-        #    print(sentence)
 
     #@st.cache
     def train_model(self, no_iterations, window_size):
         #Aufruf des Trainings desWord2Vec Algorithmus mit den in der Arbeit beschriebenen Parametern
-        self.model = gensim.models.Word2Vec(self.sentences, sg=1,min_count=0, size= 300, negative=5, iter=no_iterations, window=window_size)
+        self.model = gensim.models.Word2Vec(self.sentences, sg=1,min_count=5, size= 300, negative=5, iter=no_iterations, window=window_size)
 
 
     #gensim implementierung des scikit-learn Dimensionsreduzieren
@@ -67,12 +67,12 @@ class W2V():
 
         #Speichere die finalen Wordembeddings als .csv Datei ab
         try:
-            pd.read_csv("../Data/gensim_w2v_"+str(no_iterations)+"_"+str(window_size)+".csv")
+            pd.read_csv("Data/gensim_w2v_"+str(no_iterations)+"_"+str(window_size)+".csv")
         except:
-            file = open("../Data/gensim_w2v_"+str(no_iterations)+"_"+str(window_size)+".csv", "w+")
+            file = open("Data/gensim_w2v_"+str(no_iterations)+"_"+str(window_size)+".csv", "w+")
             file.close()
 
         values = pd.DataFrame({"x":x_vals,"y" :y_vals,"labels":labels})
-        values.to_csv("../Data/gensim_w2v_"+str(no_iterations)+"_"+str(window_size)+".csv", header=True, sep="|")
+        values.to_csv("Data/gensim_w2v_"+str(no_iterations)+"_"+str(window_size)+".csv", header=True, sep="|")
         return values
 

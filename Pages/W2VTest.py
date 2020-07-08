@@ -20,13 +20,17 @@ class Model_Test():
         self.zutatenDf = self.zutatenDf.drop("Menge", axis=1)
 
     def body(self): 
+        dataset = st.sidebar.selectbox("Datensatz", ["Korpus mit Sonderzeichen", "Korpus ohne Sonderzeichen"])
+        if dataset == "Korpus mit Sonderzeichen":
+            dataset = pd.read_csv("Data/Doku_corpusNoAmount.csv", sep= "|", header=None)
+
         no_iterations = st.sidebar.number_input("Anzahl Trainingsepochen", min_value=1, value= 5)
         window_size = st.sidebar.slider("Wortfenstergröße", min_value=1, max_value=10, value=2)
         no_cluster = st.sidebar.number_input("Anzahl Cluster", min_value=1, value= 5)
         show_clusters=st.sidebar.checkbox("Zeige detaillierte Auswertung")
         results = None
         if st.button("Starte Testlauf"):
-            results = self.run_test(no_iterations, no_cluster, window_size)
+            results = self.run_test(dataset, no_iterations, no_cluster, window_size)
             st.text("Auswertung aller Cluster")
             st.dataframe(results[1])
             if show_clusters:
@@ -36,20 +40,20 @@ class Model_Test():
 
 
     #Methode zum Aufrufen des Tests
-    def run_test(self, no_iterations = 5, cluster_amount=5, window_size=2):
+    def run_test(self, dataset, no_iterations = 5, cluster_amount=5, window_size=2):
         input_parameters = pd.DataFrame(data=[no_iterations,window_size, cluster_amount],columns =["Parameter"], index=["Iterationen", "Fenstergröße", "Clusteranzahl"])
         st.dataframe(input_parameters)
 
         #Trainiere das Word2Vec Modell
         model_trainer = w2v_gensim.W2V()
 
-        model_trainer.load_data(self.zutaten_verzeichnis)
+        model_trainer.load_data(dataset)
 
         model_trainer.buildSentences()
         w2v=None
         with st.spinner("Modelltraining"):
             try:
-                w2v=pd.read_csv("../Data/gensim_w2v_"+str(no_iterations)+"_"+str(window_size)+".csv", header=0, sep="|")
+                w2v=pd.read_csv("Data/gensim_w2v_"+str(no_iterations)+"_"+str(window_size)+".csv", header=0, sep="|")
             except :
                 model_trainer.train_model(no_iterations,window_size)
                 w2v = model_trainer.save_vectors(no_iterations, window_size)
@@ -61,6 +65,7 @@ class Model_Test():
             zuordnung = kmeans.run_manual_k(cluster_amount, cluster_data)
         
         w2v["Cluster"] = zuordnung["assigned to"]
+        w2v.to_csv("Data/w2v_full_results_"+str(no_iterations)+"_"+str(window_size)+"_"+str(cluster_amount)+".csv", header=True, sep="|")
 
         #Erzeugen eines DataFrames zur Erzeugung der Kontrollergebnisse
         clusterlist = w2v["Cluster"].unique()
@@ -81,12 +86,14 @@ class Model_Test():
         for index in list(results.index): new_indexes.append("Cluster "+index[0][1])
         results.index = new_indexes
 
+        results.to_csv("Data/w2v_cluster_results_"+str(no_iterations)+"_"+str(window_size)+"_"+str(cluster_amount)+".csv", header=True, sep="|")
+
         #Ausgabe der Testläufe des Word2Vec Algorithmus
         result_index = ["Maximum", "Durchschnitt", "Minimum", "Über 50", "Unter 10"]
         result_data = [results["Reinheit"].max(), results["Reinheit"].mean(), results["Reinheit"].min(), 
                         len(results[results["Reinheit"] > 50]), len(results[results["Reinheit"] < 10])]
-        result_frame = pd.DataFrame(data=result_data, index=result_index, columns=["Reinheit"])
-        return [results, result_frame]
+        result_zusammenfassung = pd.DataFrame(data=result_data, index=result_index, columns=["Reinheit"])
+        return [results, result_zusammenfassung]
 
         # text = st.empty()
         # st.write(results)        
