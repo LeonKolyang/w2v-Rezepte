@@ -41,12 +41,11 @@ class Auswertung():
 
                                 
         try:
-            w2v = pd.read_csv("Data/w2v_full_results_"+str(no_iterations)+"_"+str(window_size)+"_"+str(no_cluster)+".csv", header=0, sep="|")
-            w2v = w2v.drop(["Unnamed: 0","Unnamed: 0.1"], axis=1)
+            w2v = pd.read_csv("Data/w2v_full_results_"+str(no_iterations)+"_"+str(window_size)+"_"+str(no_cluster)+".csv", header=0, sep="|", index_col=0)
 
-            cluster_results= pd.read_csv("Data/w2v_cluster_results_"+str(no_iterations)+"_"+str(window_size)+"_"+str(no_cluster)+".csv", header=0, sep="|")        
-            cluster_results = cluster_results.rename(columns={"Unnamed: 0": "Cluster"})
-        except:
+            cluster_results= pd.read_csv("Data/w2v_cluster_results_"+str(no_iterations)+"_"+str(window_size)+"_"+str(no_cluster)+".csv", header=0, sep="|", index_col=0)        
+        except OSError as err:
+            #st.write("OS error: {0}".format(err))
             st.write("Modelltest mit den gewählten Parametern noch nicht durchgeführt.")
             return
 
@@ -54,6 +53,7 @@ class Auswertung():
 
         st.dataframe(cluster_results)
         clusterlist = w2v["Cluster"].sort_values().unique()
+
         cluster = st.selectbox("Details zu", clusterlist)
 
         w2v_filtered = w2v.loc[w2v["Cluster"] == cluster]
@@ -61,10 +61,11 @@ class Auswertung():
         w2v_styled = w2v_filtered.style.apply(lambda x: ["background: lightgreen" if (set(bezeichnung_list).intersection(x.values)) else "" for i in x], axis = 1)
 
         #st.dataframe(w2v.loc[w2v["Cluster"] == cluster])
-        st.dataframe(cluster_results.loc[cluster_results["Cluster"] == cluster][["Zugeordnete Wörter", "Daraus Bezeichnungen","Reinheit"]])
+        st.dataframe(cluster_results.loc[cluster_results.index == cluster][["Zugeordnete Wörter", "Daraus Bezeichnungen","Reinheit"]])
         st.dataframe(w2v_styled)
-        
 
+        
+        plt.clf()
         plot = self.plotting(w2v, cluster)
         st.pyplot(plot)
 
