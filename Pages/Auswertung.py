@@ -49,9 +49,11 @@ class Auswertung():
             st.write("Modelltest mit den gewählten Parametern noch nicht durchgeführt.")
             return
 
-        w2v["Cluster"] = w2v["Cluster"].apply(lambda x: "Cluster "+str(x[1]))
+    
+        w2v["Cluster"] = w2v["Cluster"].apply(lambda x: "Cluster "+str(x))
 
-        st.dataframe(cluster_results)
+
+        st.dataframe(cluster_results.sort_values(["Reinheit"], ascending=False))
         clusterlist = w2v["Cluster"].sort_values().unique()
 
         cluster = st.selectbox("Details zu", clusterlist)
@@ -64,10 +66,15 @@ class Auswertung():
         st.dataframe(cluster_results.loc[cluster_results.index == cluster][["Zugeordnete Wörter", "Daraus Bezeichnungen","Reinheit"]])
         st.dataframe(w2v_styled)
 
-        
+        st.write("Lage des Clusters in der gesamten Datenmenge:")
         plt.clf()
-        plot = self.plotting(w2v, cluster)
-        st.pyplot(plot)
+        plot_big = self.plotting(w2v, cluster)
+        st.pyplot(plot_big)
+
+        st.write("Fokus auf die Elemente des Clusters:")
+        plt.clf()
+        plot_focused = self.plotting(w2v_filtered, cluster)
+        st.pyplot(plot_focused)
 
 
 

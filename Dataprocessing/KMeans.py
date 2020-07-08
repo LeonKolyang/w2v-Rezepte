@@ -18,7 +18,7 @@ class KMeans():
 
     #Generiere die Cluster auf den ersten n Punkten
     def introduce_cluster(self, no_of_clusters, df):
-        cluster_dict = {"C"+str(i): (df.loc[i]["x"], df.loc[i]["y"]) for i in range(no_of_clusters)}
+        cluster_dict = {str(i): (df.loc[i]["x"], df.loc[i]["y"]) for i in range(no_of_clusters)}
         return cluster_dict
 
     #Berechne die Distanz zwischen einem Punkt und den Clustern

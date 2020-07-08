@@ -83,7 +83,8 @@ class Model_Test():
         
         results = results.sort_index()
         new_indexes = []
-        for index in list(results.index): new_indexes.append("Cluster "+index[0][1])
+        for index in list(results.index): 
+            new_indexes.append("Cluster "+str(index[0]))
         results.index = new_indexes
 
         results.to_csv("Data/w2v_cluster_results_"+str(no_iterations)+"_"+str(window_size)+"_"+str(cluster_amount)+".csv", header=True, sep="|", index=True)
