@@ -14,7 +14,7 @@ class Title():
         st.image(concept_steps[select], use_column_width=True)
 
     def mlConcept(self):
-        grid = st.radio(label="Auswertung einer neuen Zutat durch ein trainiertes Word2Vec Modell",options=["Leeres Modell", "500 ml Rewe Beste Wahl Vollmilch", "1 Glas rote Kirschen"])
+        grid = st.radio(label="Auswertung einer neuen Zutat durch ein Word2Vec Modell",options=["Leeres Modell", "500 ml Rewe Beste Wahl Vollmilch", "1 Glas rote Kirschen"])
         images = ImageLoader.loadMLImages()
         if grid == "Leeres Modell": st.image(image=images[0], width=320, format = "JPEG")
         if grid == "500 ml Rewe Beste Wahl Vollmilch": st.image(image=images[1], width=320, format = "JPEG")
@@ -25,7 +25,14 @@ class Title():
 
     def body(self):
         images = ImageLoader.loadProjImages()
+        st.subheader("Idee: Ein Kochrezept auf seine Nährstoffe hin auswerten.")
+        st.markdown("Dafür wird")
+        st.markdown("1. eine _Zutat_ in seine Bestandteile (_Menge_, _Einheit_ und _Bezeichnung_) zerlegt ")
+        st.markdown("2. zu dieser _Zutat_ die Nährstoffe ermittelt und ")
+        st.markdown("3. diese für das gesamte Rezept aufaddiert.")
         for image in images:
             st.image(image, use_column_width=True)
         
+        st.subheader("Fokus des Projekts")
+        st.markdown("Das Erkennen der _Bezeichnung_ aus der Zutat eines Kochrezepts.")
         self.mlConcept()

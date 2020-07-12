@@ -95,6 +95,7 @@ class APIHandler:
 
 def main():
     #DP = Doku_ingredientPrepare.DataProvider()
+
     title = Title.Title()
     finaldata = Finaldata.finalData()
     grabbing = Grabbing.Grabbing()
@@ -115,7 +116,7 @@ def main():
         st.write("No Data available. Save Data first.")
 
     st.header("Data Grabbing und Preprocessing für Word2Vec")
-    st.write("Vorbereitung einer Auswertung von Rezepten mit Hilfe des Machine Learning-Algorithmus Word2Vec")
+    st.write("Vorbereitung einer Auswertung von Kochrezepten mit Hilfe des Machine Learning-Algorithmus Word2Vec")
 
     tab = sidebar.navigator()
 
@@ -125,6 +126,9 @@ def main():
     text = st.sidebar.empty()    
 
     if tab == "Projektvorstellung":
+        stamp = str(datetime.datetime.now())
+        stam_df = pd.DataFrame(data = [stamp], columns=["Viewstamp"])
+        stam_df.to_csv("Data/views.csv", mode="a",header=False, index=False)
         visualiser.empty()
         visualiser = title.body()
 

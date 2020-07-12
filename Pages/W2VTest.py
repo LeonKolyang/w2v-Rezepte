@@ -36,7 +36,23 @@ class Model_Test():
             if show_clusters:
                 st.text("Details der einzelnen Cluster")
                 st.dataframe(results[0])
-                    
+            st.pyplot(results[2])
+
+    def plotting(self, df):
+        fig, ax = plt.subplots()
+
+        PADDING = 1.0
+        x_axis_min = np.amin(df, axis=0)[0] - PADDING
+        y_axis_min = np.amin(df, axis=0)[1] - PADDING
+        x_axis_max = np.amax(df, axis=0)[0] + PADDING
+        y_axis_max = np.amax(df, axis=0)[1] + PADDING
+        
+        plt.xlim(x_axis_min,x_axis_max)
+        plt.ylim(y_axis_min,y_axis_max)
+        plt.rcParams["figure.figsize"] = (10,10)
+
+        
+        return plt
 
 
     #Methode zum Aufrufen des Tests
@@ -67,6 +83,8 @@ class Model_Test():
         w2v["Cluster"] = zuordnung["assigned to"]
         w2v.to_csv("Data/w2v_full_results_"+str(no_iterations)+"_"+str(window_size)+"_"+str(cluster_amount)+".csv", header=True, sep="|", index=True)
 
+        plot = self.plotting(w2v)
+        
         #Erzeugen eines DataFrames zur Erzeugung der Kontrollergebnisse
         clusterlist = w2v["Cluster"].unique()
         results = pd.DataFrame(index=[clusterlist], columns=["Zugeordnete Wörter", "Daraus Bezeichnungen", "Reinheit"])
@@ -94,7 +112,7 @@ class Model_Test():
         result_data = [results["Reinheit"].max(), results["Reinheit"].mean(), results["Reinheit"].min(), 
                         len(results[results["Reinheit"] > 50]), len(results[results["Reinheit"] < 10])]
         result_zusammenfassung = pd.DataFrame(data=result_data, index=result_index, columns=["Reinheit"])
-        return [results, result_zusammenfassung]
+        return [results, result_zusammenfassung, plot]
 
         # text = st.empty()
         # st.write(results)        
