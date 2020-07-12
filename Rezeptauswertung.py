@@ -1,5 +1,4 @@
 import sys
-
 import streamlit as st
 import pandas as pd
 from pymongo import MongoClient
@@ -126,9 +125,8 @@ def main():
     text = st.sidebar.empty()    
 
     if tab == "Projektvorstellung":
-        stamp = str(datetime.datetime.now())
-        stam_df = pd.DataFrame(data = [stamp], columns=["Viewstamp"])
-        stam_df.to_csv("Data/views.csv", mode="a",header=False, index=False)
+        newview = "https://w2v-viewcount.herokuapp.com/newview"
+        requests.get(newview)
         visualiser.empty()
         visualiser = title.body()
 
