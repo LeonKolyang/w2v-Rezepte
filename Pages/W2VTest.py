@@ -23,7 +23,7 @@ class Model_Test():
         #dataset = st.sidebar.selectbox("Datensatz", ["Korpus mit Sonderzeichen", "Korpus ohne Sonderzeichen"])
         #if dataset == "Korpus mit Sonderzeichen":
         st.title("Modell Test")
-        st.markdown("Für die Modelltests sind die _Trainingsepochen_ des Modells, die genutzte _Wortfenstergröße_ und die projezierten _Dimensionen_ anpassbar.")
+        st.markdown("Für die Modelltests sind die _Trainingsepochen_ des Modells, die genutzte _Wortfenstergröße_ und die projizierten _Dimensionen_ anpassbar.")
         st.markdown("Das Ergebnis des Modelltrainings ist eine Anordnung der Wörter aus den Rezepten im zweidimensionalen Raum.")
         st.markdown("Die _Clusteranzahl_ bestimmt, in wie viele Cluster die ausgewerten Wörter eingeteilt werden. Die Ergebnisse des Clustering sind unter _Auswertungsergebnisse_ abgebildet.")
         dataset = pd.read_csv("Data/Doku_corpusNoAmount.csv", sep= "|", header=None)
