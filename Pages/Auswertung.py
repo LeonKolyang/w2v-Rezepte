@@ -57,7 +57,7 @@ class Auswertung():
             cluster_results= pd.read_csv("Data/w2v_cluster_results_"+str(no_iterations)+"_"+str(window_size)+"_"+str(no_cluster)+"_"+str(dimensions)+".csv", header=0, sep="|", index_col=0)        
         except OSError as err:
             #st.write("OS error: {0}".format(err))
-            st.write("Modelltest mit den gewählten Parametern noch nicht durchgeführt.")
+            st.info("Modelltest mit den gewählten Parametern noch nicht durchgeführt.")
             return
 
     
