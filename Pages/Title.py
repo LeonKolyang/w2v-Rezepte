@@ -25,7 +25,8 @@ class Title():
 
     def body(self):
         images = ImageLoader.loadProjImages()
-        st.subheader("Idee: Ein Kochrezept auf seine Nährstoffe hin auswerten.")
+        st.subheader("Das Projekt basiert auf folgender Idee:")
+        st.write("Aus den Zutaten eines Kochrezepts kann der Nährstoffgehalt des gesamten Rezepts ermittelt werden.")
         st.markdown("Dafür wird")
         st.markdown("1. eine _Zutat_ in seine Bestandteile (_Menge_, _Einheit_ und _Bezeichnung_) zerlegt ")
         st.markdown("2. zu dieser _Zutat_ die Nährstoffe ermittelt und ")
@@ -36,3 +37,10 @@ class Title():
         st.subheader("Fokus des Projekts")
         st.markdown("Das Erkennen der _Bezeichnung_ aus der Zutat eines Kochrezepts.")
         self.mlConcept()
+
+        st.subheader("Projektvorgehen")
+        st.markdown("Das Projekt teilt sich in folgende Schritte:")
+        st.markdown("1. _Grabbing_ der Daten aus online verfügbaren Kochrezepten")
+        st.markdown("2. _Preprocessing_ der Daten um diese für das Machine Learning Modell _Word2Vec_ vorzubereiten")
+        st.markdown("3. Einsatz des _Word2Vec_ _Modells_")
+        st.markdown("4. _Auswertung_ der Ergebnisse")

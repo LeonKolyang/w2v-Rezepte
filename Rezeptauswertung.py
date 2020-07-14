@@ -28,7 +28,7 @@ class Sidebar:
         #self.DP = Doku_ingredientPrepare.DataProvider()
 
     def navigator(self):
-        st.sidebar.header("Navigation")
+        st.sidebar.header("Data Grabbing und Preprocessing für Word2Vec")
         #routes = ["Projektvorstellung", "Konzept", "Data Grabbing", "Data Preprocessing", "Machine Learning Task", "Machine Learning Offline", "KMeans"]
         routes = ["Projektvorstellung", "Data Grabbing", "Data Preprocessing", "Finaler Datensatz", "Modell Test", "Auswertungsergebnisse"]
 
@@ -114,8 +114,7 @@ def main():
     except:
         st.write("No Data available. Save Data first.")
 
-    st.header("Data Grabbing und Preprocessing für Word2Vec")
-    st.write("Vorbereitung einer Auswertung von Kochrezepten mit Hilfe des Machine Learning-Algorithmus Word2Vec")
+   
 
     tab = sidebar.navigator()
 
@@ -125,9 +124,11 @@ def main():
     text = st.sidebar.empty()    
 
     if tab == "Projektvorstellung":
+        st.header("Data Grabbing und Preprocessing für Word2Vec")
+        st.write("Vorbereitung einer Auswertung von Kochrezepten mit Hilfe des Machine Learning-Algorithmus Word2Vec")      
         newview = "https://w2v-viewcount.herokuapp.com/newview"
         requests.get(newview)
-        visualiser.empty()
+        visualiser.empty()  
         visualiser = title.body()
 
 

@@ -22,20 +22,20 @@ class Model_Test():
     def body(self): 
         #dataset = st.sidebar.selectbox("Datensatz", ["Korpus mit Sonderzeichen", "Korpus ohne Sonderzeichen"])
         #if dataset == "Korpus mit Sonderzeichen":
+        st.title("Modell Test")
+        st.markdown("Für die Modelltests sind die _Trainingsepochen_ des Modells, die genutzte _Wortfenstergröße_ und die projezierten _Dimensionen_ anpassbar.")
+        st.markdown("Das Ergebnis des Modelltrainings ist eine Anordnung der Wörter aus den Rezepten im zweidimensionalen Raum.")
+        st.markdown("Die _Clusteranzahl_ bestimmt, in wie viele Cluster die ausgewerten Wörter eingeteilt werden. Die Ergebnisse des Clustering sind unter _Auswertungsergebnisse_ abgebildet.")
         dataset = pd.read_csv("Data/Doku_corpusNoAmount.csv", sep= "|", header=None)
 
         no_iterations = st.sidebar.number_input("Anzahl Trainingsepochen", min_value=1, value= 5)
         window_size = st.sidebar.number_input("Wortfenstergröße", min_value=1, value=2)
+        dimensions = st.sidebar.number_input("Dimensionen", min_value=1, value= 300)
         no_cluster = st.sidebar.number_input("Anzahl Cluster", min_value=1, value= 5)
-        show_clusters=st.sidebar.checkbox("Zeige detaillierte Auswertung")
+
         results = None
         if st.button("Starte Testlauf"):
-            results = self.run_test(dataset, no_iterations, no_cluster, window_size)
-            st.text("Auswertung aller Cluster")
-            st.dataframe(results[1])
-            if show_clusters:
-                st.text("Details der einzelnen Cluster")
-                st.dataframe(results[0])
+            results = self.run_test(dataset, no_iterations, no_cluster, window_size, dimensions)
             st.text("Anordnung der Wörter im zweidimensionalen Raum")
             plt.scatter(results[2].x,results[2].y)
             st.pyplot()
@@ -59,8 +59,8 @@ class Model_Test():
 
 
     #Methode zum Aufrufen des Tests
-    def run_test(self, dataset, no_iterations = 5, cluster_amount=5, window_size=2):
-        input_parameters = pd.DataFrame(data=[no_iterations,window_size, cluster_amount],columns =["Parameter"], index=["Iterationen", "Fenstergröße", "Clusteranzahl"])
+    def run_test(self, dataset, no_iterations = 5, cluster_amount=5, window_size=2, dimensions = 300):
+        input_parameters = pd.DataFrame(data=[no_iterations,window_size, dimensions, cluster_amount],columns =["Parameter"], index=["Iterationen", "Fenstergröße", "Dimensionen","Clusteranzahl"])
         st.dataframe(input_parameters)
 
         #Trainiere das Word2Vec Modell
@@ -72,41 +72,46 @@ class Model_Test():
         w2v=None
         with st.spinner("Modelltraining"):
             try:
-                w2v=pd.read_csv("Data/gensim_w2v_"+str(no_iterations)+"_"+str(window_size)+".csv", header=0, sep="|", index_col=0)
+                w2v=pd.read_csv("Data/gensim_w2v_"+str(no_iterations)+"_"+str(window_size)+"_"+str(dimensions)+".csv", header=0, sep="|", index_col=0)
             except :
-                model_trainer.train_model(no_iterations,window_size)
-                w2v = model_trainer.save_vectors(no_iterations, window_size)
+                model_trainer.train_model(no_iterations,window_size, dimensions)
+                w2v = model_trainer.save_vectors(no_iterations, window_size, dimensions)
 
         #Cluster die Vektoren aus dem Word2Vec Modell
         cluster_data = w2v[["x","y"]]
         kmeans = km.KMeans()
         with st.spinner("Clustering"):
-            zuordnung = kmeans.run_manual_k(cluster_amount, cluster_data)
-        
-        w2v["Cluster"] = zuordnung["assigned to"]
-        w2v.to_csv("Data/w2v_full_results_"+str(no_iterations)+"_"+str(window_size)+"_"+str(cluster_amount)+".csv", header=True, sep="|", index=True)
+            try:
+                w2v = pd.read_csv("Data/w2v_full_results_"+str(no_iterations)+"_"+str(window_size)+"_"+str(cluster_amount)+"_"+str(dimensions)+".csv", header=0, sep="|", index_col=0)
+            except:
+                zuordnung = kmeans.run_manual_k(cluster_amount, cluster_data)
+                w2v["Cluster"] = zuordnung["assigned to"]
+                w2v.to_csv("Data/w2v_full_results_"+str(no_iterations)+"_"+str(window_size)+"_"+str(cluster_amount)+"_"+str(dimensions)+".csv", header=True, sep="|", index=True)
 
         #Erzeugen eines DataFrames zur Erzeugung der Kontrollergebnisse
-        clusterlist = w2v["Cluster"].unique()
-        results = pd.DataFrame(index=[clusterlist], columns=["Zugeordnete Wörter", "Daraus Bezeichnungen", "Reinheit"])
-        for cluster in clusterlist:
-            c_frame= w2v.loc[w2v["Cluster"]==cluster] 
-            match_list = []
-            for index, row in c_frame.iterrows():
-                if row["labels"] in list(self.zutatenDf["Zuordnung"]):
-                    match_list.append(row["labels"])
-                
-            results["Zugeordnete Wörter"][cluster] = len(c_frame)
-            results["Daraus Bezeichnungen"][cluster] = len(match_list)
-            results["Reinheit"][cluster] = round((len(match_list)/len(c_frame))*100,1)
-        
-        results = results.sort_index()
-        new_indexes = []
-        for index in list(results.index): 
-            new_indexes.append("Cluster "+str(index[0]))
-        results.index = new_indexes
+        try:
+            results = pd.read_csv("Data/w2v_cluster_results_"+str(no_iterations)+"_"+str(window_size)+"_"+str(cluster_amount)+"_"+str(dimensions)+".csv", header=0, sep="|", index_col=0)
+        except:
+            clusterlist = w2v["Cluster"].unique()
+            results = pd.DataFrame(index=[clusterlist], columns=["Zugeordnete Wörter", "Daraus Bezeichnungen", "Reinheit"])
+            for cluster in clusterlist:
+                c_frame= w2v.loc[w2v["Cluster"]==cluster] 
+                match_list = []
+                for index, row in c_frame.iterrows():
+                    if row["labels"] in list(self.zutatenDf["Zuordnung"]):
+                        match_list.append(row["labels"])
+                    
+                results["Zugeordnete Wörter"][cluster] = len(c_frame)
+                results["Daraus Bezeichnungen"][cluster] = len(match_list)
+                results["Reinheit"][cluster] = round((len(match_list)/len(c_frame))*100,1)
+            
+            results = results.sort_index()
+            new_indexes = []
+            for index in list(results.index): 
+                new_indexes.append("Cluster "+str(index[0]))
+            results.index = new_indexes
 
-        results.to_csv("Data/w2v_cluster_results_"+str(no_iterations)+"_"+str(window_size)+"_"+str(cluster_amount)+".csv", header=True, sep="|", index=True)
+            results.to_csv("Data/w2v_cluster_results_"+str(no_iterations)+"_"+str(window_size)+"_"+str(cluster_amount)+"_"+str(dimensions)+".csv", header=True, sep="|", index=True)
 
         #Ausgabe der Testläufe des Word2Vec Algorithmus
         result_index = ["Maximum", "Durchschnitt", "Minimum", "Über 50", "Unter 10"]

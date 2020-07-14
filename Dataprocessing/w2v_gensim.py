@@ -32,9 +32,9 @@ class W2V():
         #        break
 
     #@st.cache
-    def train_model(self, no_iterations, window_size):
+    def train_model(self, no_iterations, window_size, dimensions):
         #Aufruf des Trainings desWord2Vec Algorithmus mit den in der Arbeit beschriebenen Parametern
-        self.model = gensim.models.Word2Vec(self.sentences, sg=1,min_count=5, size= 300, negative=5, iter=no_iterations, window=window_size)
+        self.model = gensim.models.Word2Vec(self.sentences, sg=1,min_count=5, size= dimensions, negative=5, iter=no_iterations, window=window_size)
 
 
     #gensim implementierung des scikit-learn Dimensionsreduzieren
@@ -61,18 +61,18 @@ class W2V():
         y_vals = [v[1] for v in vectors]
         return x_vals, y_vals, labels
 
-    def save_vectors(self, no_iterations, window_size):
+    def save_vectors(self, no_iterations, window_size, dimensions):
         #Reduzierung der Dimensionen
         x_vals, y_vals, labels = self.reduce_dimensions(self.model)
 
         #Speichere die finalen Wordembeddings als .csv Datei ab
         try:
-            pd.read_csv("Data/gensim_w2v_"+str(no_iterations)+"_"+str(window_size)+".csv")
+            pd.read_csv("Data/gensim_w2v_"+str(no_iterations)+"_"+str(window_size)+"_"+str(dimensions)+".csv")
         except:
-            file = open("Data/gensim_w2v_"+str(no_iterations)+"_"+str(window_size)+".csv", "w+")
+            file = open("Data/gensim_w2v_"+str(no_iterations)+"_"+str(window_size)+"_"+str(dimensions)+".csv", "w+")
             file.close()
 
         values = pd.DataFrame({"x":x_vals,"y" :y_vals,"labels":labels})
-        values.to_csv("Data/gensim_w2v_"+str(no_iterations)+"_"+str(window_size)+".csv", header=True, sep="|")
+        values.to_csv("Data/gensim_w2v_"+str(no_iterations)+"_"+str(window_size)+"_"+str(dimensions)+".csv", header=True, sep="|")
         return values
 

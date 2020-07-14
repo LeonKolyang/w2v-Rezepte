@@ -7,6 +7,9 @@ class finalData():
         self.images = ImageLoader.loadMLImages()
 
     def body(self):
+        st.title("Finaler Datensatz")
+        st.markdown("Das _Word2Vec_ _Modell_ wird auf dem erzeugten Zutatenverzeichnis und Korpus trainiert.")
+
         reducedWordList = pd.read_csv('Data/Doku_wordListNoAmount.csv', encoding="UTF-8", sep="|", header =None, names=["Wort"])
         reducedCorpus = pd.read_csv('Data/Doku_corpusNoAmount.csv', encoding="UTF-8", sep="|", header = None, names=["Zutat"])
 
