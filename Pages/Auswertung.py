@@ -45,10 +45,10 @@ class Auswertung():
 
         bezeichnung_list = pd.read_csv("Data/topIngredients.csv", header = 0,sep="," )["name"].tolist()
 
-        no_iterations = st.sidebar.number_input("Anzahl Trainingsepochen", min_value=1, value= 5)
-        window_size = st.sidebar.number_input("Wortfenstergröße", min_value=1, value=2)
-        dimensions = st.sidebar.number_input("Dimensionen", min_value=1, value=300)
-        no_cluster = st.sidebar.number_input("Anzahl Cluster", min_value=1, value= 5)
+        no_iterations = st.sidebar.slider("Anzahl Trainingsepochen", min_value=1, value= 5, max_value=10)
+        window_size = st.sidebar.slider("Wortfenstergröße", min_value=1, value=2, max_value=10)
+        dimensions = st.sidebar.slider("Dimensionen", min_value=1, value=300, max_value=1200,step=300)
+        no_cluster = st.sidebar.selectbox("Anzahl Cluster",options=[2,5,10,20,40,50,70,100,200], index=2)
 
                                 
         try:
