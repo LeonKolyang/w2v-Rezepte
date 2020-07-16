@@ -60,19 +60,15 @@ class Auswertung():
             st.info("Modelltest mit den gewählten Parametern noch nicht durchgeführt.")
             return
 
-        st.dataframe(w2v)
         w2v["Cluster"] = w2v["Cluster"].apply(lambda x: "Cluster "+str(x))
 
-        st.dataframe(w2v)
         st.dataframe(cluster_results.sort_values(["Reinheit"], ascending=False))
         clusterlist = list(w2v["Cluster"].sort_values().unique())
-        st.write(clusterlist)
-        st.write(clusterlist[0])
-        default_cluster = clusterlist[0]
+        
         st.write("")
         st.markdown("Über die folgende Selektion lassen sich Details zu einem oder mehreren Clustern anzeigen.")
 
-        cluster = st.multiselect("Details zu", clusterlist, [default_cluster])
+        cluster = st.multiselect("Details zu", clusterlist, [clusterlist[0]])
         #cluster = st.selectbox("Details zu", clusterlist)
         w2v_filtered = w2v[w2v["Cluster"].isin(cluster)]
 
