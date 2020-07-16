@@ -48,7 +48,7 @@ class Auswertung():
         no_iterations = st.sidebar.slider("Anzahl Trainingsepochen", min_value=1, value= 5, max_value=10)
         window_size = st.sidebar.slider("Wortfenstergröße", min_value=1, value=2, max_value=10)
         dimensions = st.sidebar.slider("Dimensionen", min_value=1, value=300, max_value=1200,step=300)
-        no_cluster = st.sidebar.selectbox("Anzahl Cluster",options=[2,5,10,20,40,50,70,100,200], index=2)
+        no_cluster = st.sidebar.selectbox("Anzahl Cluster",options=[2,5,10,20,40,50,70,100,200], index=2 )
 
                                 
         try:
@@ -64,11 +64,13 @@ class Auswertung():
 
         st.dataframe(cluster_results.sort_values(["Reinheit"], ascending=False))
         clusterlist = list(w2v["Cluster"].sort_values().unique())
+        default_cluster = cluster_results.loc[cluster_results["Reinheit"]>70]
+        default_cluster = list(default_cluster.index)
         
         st.write("")
         st.markdown("Über die folgende Selektion lassen sich Details zu einem oder mehreren Clustern anzeigen.")
 
-        cluster = st.multiselect("Details zu", clusterlist, [clusterlist[0]])
+        cluster = st.multiselect("Details zu", clusterlist, default_cluster)
         #cluster = st.selectbox("Details zu", clusterlist)
         w2v_filtered = w2v[w2v["Cluster"].isin(cluster)]
 
