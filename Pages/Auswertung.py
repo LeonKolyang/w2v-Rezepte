@@ -72,7 +72,7 @@ class Auswertung():
         st.write("")
         st.markdown("Über die folgende Selektion lassen sich Details zu einem oder mehreren Clustern anzeigen.")
 
-        cluster = st.multiselect("Details zu", clusterlist, default = default_cluster)
+        cluster = st.multiselect("Details zu", clusterlist, default_cluster)
         #cluster = st.selectbox("Details zu", clusterlist)
         w2v_filtered = w2v[w2v["Cluster"].isin(cluster)]
 
