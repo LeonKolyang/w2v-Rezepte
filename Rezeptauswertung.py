@@ -30,7 +30,7 @@ class Sidebar:
     def navigator(self):
         st.sidebar.header("Data Grabbing und Preprocessing für Word2Vec")
         #routes = ["Projektvorstellung", "Konzept", "Data Grabbing", "Data Preprocessing", "Machine Learning Task", "Machine Learning Offline", "KMeans"]
-        routes = ["Projektvorstellung", "Data Grabbing", "Data Preprocessing", "Finaler Datensatz", "Modell Test", "Auswertungsergebnisse"]
+        routes = ["Tool Test","Projektvorstellung", "Data Grabbing", "Data Preprocessing", "Modell Test", "Modellauswertung"]
 
         return st.sidebar.radio("Go to", routes)
         
@@ -95,6 +95,8 @@ class APIHandler:
 def main():
     #DP = Doku_ingredientPrepare.DataProvider()
 
+    pipeline = Pipeline.Pipeline()
+
     title = Title.Title()
     finaldata = Finaldata.finalData()
     grabbing = Grabbing.Grabbing()
@@ -123,11 +125,13 @@ def main():
 
     text = st.sidebar.empty()    
 
+    if tab == "Tool Test":
+        visualiser.empty()  
+        visualiser = pipeline.body()
+
     if tab == "Projektvorstellung":
         st.header("Data Grabbing und Preprocessing für Word2Vec")
         st.write("Vorbereitung einer Auswertung von Kochrezepten mit Hilfe des Machine Learning-Algorithmus Word2Vec")      
-        newview = "https://w2v-viewcount.herokuapp.com/newview"
-        requests.get(newview)
         visualiser.empty()  
         visualiser = title.body()
 
@@ -174,7 +178,7 @@ def main():
         visualiser.empty()
         visualiser = w2vTest.body()
     
-    if tab == "Auswertungsergebnisse":
+    if tab == "Modellauswertung":
         visualiser.empty()
         visualiser = auswertung.body()
 

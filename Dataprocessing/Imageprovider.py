@@ -16,7 +16,7 @@ class ImageLoader:
 
     @st.cache
     def loadMLImages():
-        emptyGrid = "static/Word2Vec Idee_leer.jpeg"
-        milkGrid = "static/Word2Vec Idee_Milch.jpeg"
-        cherryGrid = "static/Word2Vec Idee_Kirschen.jpeg"
+        emptyGrid = "static/Word2Vec_Idee_leer.jpeg"
+        milkGrid = "static/Word2Vec_Idee_Milch.jpeg"
+        cherryGrid = "static/Word2Vec_Idee_Kirschen.jpeg"
         return [emptyGrid, milkGrid, cherryGrid]

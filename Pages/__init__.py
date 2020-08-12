@@ -1,1 +1,1 @@
-__all__=["Title", "Auswertung", "Finaldata", "Preprocessing", "W2VTest", "Grabbing"]
+__all__=["Title", "Auswertung", "Finaldata", "Preprocessing", "W2VTest", "Grabbing", "Pipeline"]
