@@ -97,7 +97,7 @@ def main():
 
     pipeline = Pipeline.Pipeline()
 
-    pipeline.start_service()
+    #pipeline.start_service()
 
     title = Title.Title()
     finaldata = Finaldata.finalData()
