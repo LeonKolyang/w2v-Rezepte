@@ -15,7 +15,7 @@ class Pipeline():
         if st.button("Neue Zutat auswerten"):
             data = {"data":{"new_phrase": new_phrase.split()}}
             data = json.dumps(data)
-            new = requests.get( "http://localhost:8000/evaluate_new_phrase/word2vec", data=data)
+            new = requests.get( "https://w2v-mlmodels.herokuapp.com/evaluate_new_phrase/word2vec", data=data)
             new = json.loads(new.json())
             new = pd.DataFrame(new)
             new.to_csv("new_phrase.csv", index=None, sep="|")
@@ -67,38 +67,38 @@ class Pipeline():
             for parameter, value in parameters.items():
                 clparameter_list.append({"parameter": parameter, "value": value} )     
 
-            url = "http://localhost:8000/create_model/word2vec/new"
+            url = "https://w2v-mlmodels.herokuapp.com/create_model/word2vec/new"
             put = requests.post(url)
 
             zutatenverzeichnis = zutatenverzeichnis.to_dict()
             data_dict = {"data": {"zutatenverzeichnis": zutatenverzeichnis}}
             data = json.dumps(data_dict)
-            requests.put( "http://localhost:8000/load_model_data/word2vec", data=data)
+            requests.put( "https://w2v-mlmodels.herokuapp.com/load_model_data/word2vec", data=data)
 
             data = parameter_list
             data = json.dumps(data)
-            requests.put("http://localhost:8000/load_model_parameters/word2vec", data=data)
+            requests.put("https://w2v-mlmodels.herokuapp.com/load_model_parameters/word2vec", data=data)
 
-            mlurl = "http://localhost:8000/run_model/word2vec"
+            mlurl = "https://w2v-mlmodels.herokuapp.com/run_model/word2vec"
             put = requests.put(mlurl)
             
-            url = "http://localhost:8000/get_result/word2vec/all"
+            url = "https://w2v-mlmodels.herokuapp.com/get_result/word2vec/all"
             get = requests.get(url)
             word_vectors = json.loads(get.json())
             word_vectors = pd.DataFrame(word_vectors)
 
-            requests.post("http://localhost:8000/create_model/clustering/new")
+            requests.post("https://w2v-mlmodels.herokuapp.com/create_model/clustering/new")
             word_vectors = word_vectors.to_dict()
             top_ingredients = top_ingredients.to_dict()
             data_dict = {"data": {"word_vectors": word_vectors,
                                     "ingredients": top_ingredients}}
             data = json.dumps(data_dict)
-            requests.put( "http://localhost:8000/load_model_data/clustering", data=data)
+            requests.put( "https://w2v-mlmodels.herokuapp.com/load_model_data/clustering", data=data)
 
-            mlurl = "http://localhost:8000/load_model_parameters/clustering"
+            mlurl = "https://w2v-mlmodels.herokuapp.com/load_model_parameters/clustering"
             params = clparameter_list
             params = json.dumps(params)
             put = requests.put(mlurl, data=params)
 
-            mlurl = "http://localhost:8000/run_model/clustering"
+            mlurl = "https://w2v-mlmodels.herokuapp.com/run_model/clustering"
             put = requests.put(mlurl)
