@@ -30,7 +30,7 @@ class Sidebar:
     def navigator(self):
         st.sidebar.header("Data Grabbing und Preprocessing für Word2Vec")
         #routes = ["Projektvorstellung", "Konzept", "Data Grabbing", "Data Preprocessing", "Machine Learning Task", "Machine Learning Offline", "KMeans"]
-        routes = ["Tool Test","Projektvorstellung", "Data Grabbing", "Data Preprocessing", "Modell Test", "Modellauswertung"]
+        routes = ["Projektvorstellung", "Data Grabbing", "Data Preprocessing", "Modell Test", "Modellauswertung", "Tool Test"]
 
         return st.sidebar.radio("Go to", routes)
         
@@ -204,6 +204,10 @@ def main():
     st.sidebar.markdown("Interaktive Begleitdokumentation")
     st.sidebar.markdown("\"Data Mining: Extraktion von Onlinerezepten und Verarbeitung mittels Word2Vec\"")
     st.sidebar.text("Leon Kolyang Menkreo-Kuntzsch")
+    st.sidebar.text("Microservices Repository:")
+    st.sidebar.text("https://github.com/LeonKolyang/w2v-microservices")
+    st.sidebar.text("Frontend Repository:")
+    st.sidebar.text("https://github.com/LeonKolyang/w2v-Rezepte")
 
     
 
