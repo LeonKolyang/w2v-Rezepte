@@ -7,35 +7,66 @@ from Dataprocessing.Imageprovider import ImageLoader
 
 
 class Pipeline():
+
     def body(self):
-        zutatenverzeichnis = pd.read_csv("BaseData/zutatenverzeichnis.csv", header=None,sep="|")
-        zutatenverzeichnis.columns=["name"] 
-        top_ingredients = pd.read_csv("BaseData/top_ingredients.csv", header=0, index_col=0)
-        top_ingredients = top_ingredients.reset_index(drop=True)
+        
+        new_phrase = st.text_input("Zutat")
 
-        parameters = {"iterations": 10,
-                        "window_size" : 2,
-                        "dimensions" : 300,
-                        "min" : 0,
-                        "neg" : 0}
-        # parameters = {"iterations": st.number_input("iterations", value=10),
-        #                 "window_size" : st.number_input("window_size", value=2),
-        #                 "dimensions" : st.number_input("dimensions", value=300),
-        #                 "min" : st.number_input("min", value=5),
-        #                 "neg" : st.number_input("neg", value=5)}
+        if st.button("Neue Zutat auswerten"):
+            data = {"data":{"new_phrase": new_phrase.split()}}
+            data = json.dumps(data)
+            new = requests.get( "http://localhost:8000/evaluate_new_phrase/word2vec", data=data)
+            new = json.loads(new.json())
+            new = pd.DataFrame(new)
+            new.to_csv("new_phrase.csv", index=None, sep="|")
+            new = new.rename(columns={"reinheit":"Bezeichnung", "labels":"Wort"})
+            st.write("Als Bezeichnung identifiziert:")
+            st.write(new.loc[new["Bezeichnung"]==new["Bezeichnung"].max()]["Wort"])
+            st.write("Sonstige Zuordnungen:")
+            st.write(new[["Wort", "Bezeichnung"]])
 
-        parameter_list = []
-        for parameter, value in parameters.items():
-            parameter_list.append({"parameter": parameter, "value": value} )
+        st.write("\n")
+        st.write("\n")
+        st.write("\n")
+        st.write("Das W2V-Rezepte Tool wertet Phrasen aus und erkennt das enthaltene Lebensmittel. "
+                "Die Auswertung basiert auf folgendem Schema und wird unter dem Tab \"Projektvorstellung\" genauer erklärt.")
+        self.mlConcept()
 
-        parameters={"no_clusters": 8}
-        #parameters={"no_clusters":st.number_input("Cluster", value=8)}
+    def mlConcept(self):
+        grid = st.radio(label="Auswertung einer neuen Zutat durch ein Word2Vec Modell",options=["Trainiertes Modell", "500 ml Rewe Beste Wahl Vollmilch", "1 Glas rote Kirschen"])
+        i1, i2, i3 = ImageLoader.loadMLImages()
+        if grid == "Trainiertes Modell": st.image(image=i1, width=320, format = "JPEG")
+        if grid == "500 ml Rewe Beste Wahl Vollmilch": st.image(image=i2, width=320, format = "JPEG")
+        if grid == "1 Glas rote Kirschen": st.image(image=i3, width=320, format="JPEG")
+            
+    def start_service(self):
+            zutatenverzeichnis = pd.read_csv("BaseData/zutatenverzeichnis.csv", header=None,sep="|")
+            zutatenverzeichnis.columns=["name"] 
+            top_ingredients = pd.read_csv("BaseData/top_ingredients.csv", header=0, index_col=0)
+            top_ingredients = top_ingredients.reset_index(drop=True)
 
-        clparameter_list = []
-        for parameter, value in parameters.items():
-            clparameter_list.append({"parameter": parameter, "value": value} )
+            parameters = {"iterations": 10,
+                            "window_size" : 2,
+                            "dimensions" : 300,
+                            "min" : 0,
+                            "neg" : 0}
+            # parameters = {"iterations": st.number_input("iterations", value=10),
+            #                 "window_size" : st.number_input("window_size", value=2),
+            #                 "dimensions" : st.number_input("dimensions", value=300),
+            #                 "min" : st.number_input("min", value=5),
+            #                 "neg" : st.number_input("neg", value=5)}
 
-        if st.sidebar.button("Start Service"): 
+            parameter_list = []
+            for parameter, value in parameters.items():
+                parameter_list.append({"parameter": parameter, "value": value} )
+
+            parameters={"no_clusters": 8}
+            #parameters={"no_clusters":st.number_input("Cluster", value=8)}
+
+            clparameter_list = []
+            for parameter, value in parameters.items():
+                clparameter_list.append({"parameter": parameter, "value": value} )     
+
             url = "http://localhost:8000/create_model/word2vec/new"
             put = requests.post(url)
 
@@ -71,37 +102,3 @@ class Pipeline():
 
             mlurl = "http://localhost:8000/run_model/clustering"
             put = requests.put(mlurl)
-
-       
-
-
-        new_phrase = st.text_input("Zutat")
-
-        if st.button("Neue Zutat auswerten"):
-            data = {"data":{"new_phrase": new_phrase.split()}}
-            data = json.dumps(data)
-            new = requests.get( "http://localhost:8000/evaluate_new_phrase/word2vec", data=data)
-            new = json.loads(new.json())
-            new = pd.DataFrame(new)
-            new.to_csv("new_phrase.csv", index=None, sep="|")
-            new = new.rename(columns={"reinheit":"Bezeichnung", "labels":"Wort"})
-            st.write("Als Bezeichnung identifiziert:")
-            st.write(new.loc[new["Bezeichnung"]==new["Bezeichnung"].max()]["Wort"])
-            st.write("Sonstige Zuordnungen")
-            st.write(new[["Wort", "Bezeichnung"]])
-
-        st.write("\n")
-        st.write("\n")
-        st.write("\n")
-        st.write("Das W2V-Rezepte Tool wertet Phrasen aus und erkennt das enthaltene Lebensmittel. "
-                "Die Auswertung basiert auf folgendem Schema und wird unter dem Tab \"Projektvorstellung\" genauer erklärt.")
-        self.mlConcept()
-
-    def mlConcept(self):
-        grid = st.radio(label="Auswertung einer neuen Zutat durch ein Word2Vec Modell",options=["Trainiertes Modell", "500 ml Rewe Beste Wahl Vollmilch", "1 Glas rote Kirschen"])
-        i1, i2, i3 = ImageLoader.loadMLImages()
-        if grid == "Trainiertes Modell": st.image(image=i1, width=320, format = "JPEG")
-        if grid == "500 ml Rewe Beste Wahl Vollmilch": st.image(image=i2, width=320, format = "JPEG")
-        if grid == "1 Glas rote Kirschen": st.image(image=i3, width=320, format="JPEG")
-            
-        
