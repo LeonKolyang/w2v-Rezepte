@@ -25,16 +25,13 @@ import matplotlib.pyplot as plt
 class Sidebar:
     def __init__(self):
         pass
-        #self.DP = Doku_ingredientPrepare.DataProvider()
 
     def navigator(self):
         st.sidebar.header("Data Grabbing und Preprocessing für Word2Vec")
-        #routes = ["Projektvorstellung", "Konzept", "Data Grabbing", "Data Preprocessing", "Machine Learning Task", "Machine Learning Offline", "KMeans"]
-        routes = ["Projektvorstellung", "Data Grabbing", "Data Preprocessing", "Modell Test", "Modellauswertung", "Tool Test"]
+        routes = ["Tool Test", "Projektvorstellung", "Data Grabbing", "Data Preprocessing", "Modell Test", "Modellauswertung"]
 
         return st.sidebar.radio("Go to", routes)
         
-
     def dataSelector(self):
         return st.sidebar.selectbox("Datensatz",("Vollständiger Datensatz", "Test Datensatz"),index=0)
 
@@ -67,37 +64,9 @@ class Sidebar:
 
 
 
-class APIHandler:
-    def __init__(self):
-        self.URL = "https://mlservice-dot-w2vrecipes.appspot.com/"
-        self.testURL = "http://localhost:5000/"
-    
-    def startML(self, wordList, corpus, iterations):
-        jsonWords = wordList.to_dict()
-        jsonCorpus = corpus.to_dict()
-        body = {    "wordList": jsonWords,
-                    "corpus":   jsonCorpus,
-                    "iterations": iterations}
-        body = json.dumps(body)
-        response = requests.post(self.testURL + "startml/", json = body)
-        return response
-
-    def getResults(self):
-        try:
-            response = requests.get(self.testURL + "progress/getresults")
-            responseDict = response.json()
-            return responseDict
-        except:
-            return None
-
-
-
 def main():
-    #DP = Doku_ingredientPrepare.DataProvider()
-
     pipeline = Pipeline.Pipeline()
-
-    #pipeline.start_service()
+    pipeline.start_service()
 
     title = Title.Title()
     finaldata = Finaldata.finalData()
@@ -105,9 +74,6 @@ def main():
     preprocessing = Preprocessing.Preprocessing()
     w2vTest = W2VTest.Model_Test()
     auswertung = Auswertung.Auswertung()
-    #mlTask = MLTask.MLTask()
-    #vectorization = Vectorization.Vectorization()
-
     
     sidebar = Sidebar()
     visualiser = st.empty()
@@ -118,13 +84,9 @@ def main():
     except:
         st.write("No Data available. Save Data first.")
 
-   
-
     tab = sidebar.navigator()
-
     dataSelector = st.empty()
     data = None
-
     text = st.sidebar.empty()    
 
     if tab == "Tool Test":
@@ -137,20 +99,16 @@ def main():
         visualiser.empty()  
         visualiser = title.body()
 
-
     if tab == "Data Grabbing":
         visualiser.empty()
-       
-        #@st.cache
+
         def loadGrabImages():
-           
             sample = "static/Rezept Beispiel.png"
             zubereitung = "static/Rezept Beispiel_Name.png"
             zutaten = "static/Rezept Beispiel_Zutaten.png"
             menge = "static/Rezept Beispiel_Menge.png"
             einheit ="static/Rezept Beispiel_Einheit.png"
             bezeichnung = "static/Rezept Beispiel_Bezeichnung.png"
-            
             return [sample, zubereitung, zutaten, menge, einheit, bezeichnung]
 
         images = loadGrabImages()
@@ -158,8 +116,6 @@ def main():
     
 
     if tab == "Data Preprocessing":
-        #dataSelector = sidebar.dataSelector()
-        #data = sidebar.dataReturn(dataSelector)
         @st.cache
         def loadDataImages():
             emptyGrid = "static/Word2Vec Idee_leer.jpeg"
@@ -168,7 +124,6 @@ def main():
             return [emptyGrid, milkGrid, cherryGrid]
         
         visualiser.empty()
-        #saver = sidebar.saveData()
         images = loadDataImages()
         visualiser = preprocessing.body(images[0], images[1], images[2])
 
@@ -186,7 +141,6 @@ def main():
 
     if tab == "Machine Learning Task":
         dataSelector = sidebar.dataSelector()
-        
         text.empty()
         visualiser.empty()
         visualiser = mlTask.body(dataSelector)
