@@ -26,9 +26,15 @@ class Sidebar:
     def __init__(self):
         pass
 
-    def navigator(self):
+    def navigator_with_tool(self):
         st.sidebar.header("Data Grabbing und Preprocessing für Word2Vec")
         routes = ["Tool Test", "Projektvorstellung", "Data Grabbing", "Data Preprocessing", "Modell Test", "Modellauswertung"]
+
+        return st.sidebar.radio("Go to", routes)
+    
+    def navigator_without_tool(self):
+        st.sidebar.header("Data Grabbing und Preprocessing für Word2Vec")
+        routes = ["Projektvorstellung", "Data Grabbing", "Data Preprocessing", "Modell Test", "Modellauswertung"]
 
         return st.sidebar.radio("Go to", routes)
         
@@ -66,7 +72,14 @@ class Sidebar:
 
 def main():
     pipeline = Pipeline.Pipeline()
-    pipeline.start_service()
+    pipeline_connection = False
+    try: 
+        pipeline.start_service()
+        pipeline_connection = True
+    except Exception as e:
+        pipeline_connection = False
+        sys.stdout.write(str(e))
+
 
     title = Title.Title()
     finaldata = Finaldata.finalData()
@@ -84,7 +97,10 @@ def main():
     except:
         st.write("No Data available. Save Data first.")
 
-    tab = sidebar.navigator()
+    if pipeline_connection:
+        tab = sidebar.navigator_with_tool()
+    else:
+        tab = sidebar.navigator_without_tool()
     dataSelector = st.empty()
     data = None
     text = st.sidebar.empty()    
